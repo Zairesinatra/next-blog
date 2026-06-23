@@ -1,0 +1,30 @@
+# dependencies
+node_modules
+
+# next.js
+.next
+out
+
+# content collections
+.content-collections
+
+# production
+dist
+build
+tsconfig.tsbuildinfo
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+*.err
+
+# env
+.env*
+!.env.example
