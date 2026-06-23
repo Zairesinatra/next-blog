@@ -17,6 +17,8 @@
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "rehype-pretty-code": "^0.14.3",
+    "rehype-slug": "^6.0.0",
     "remark-gfm": "latest",
     "shiki": "latest",
     "zod": "latest"
