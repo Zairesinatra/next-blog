@@ -1,0 +1,29 @@
+---
+title: "Next.js App Router 博客起步笔记"
+date: "2026-06-23"
+description: "用 App Router、Content Collections 和 MDX 搭一个静态生成的个人博客。"
+tags: ["Next.js", "MDX", "SSG"]
+status: "published"
+---
+
+## 为什么选静态生成
+
+个人博客的大多数页面都不需要运行时服务器。文章在构建时被解析成 HTML，访问时走 CDN，速度、成本和稳定性都很好。
+
+这套项目里，文章来自 `content/` 目录，页面通过 `generateStaticParams()` 提前生成。
+
+## 一个很小的代码片段
+
+```tsx
+export function generateStaticParams() {
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+```
+
+## 接下来可以扩展什么
+
+- 接入 Giscus 评论。
+- 增加 RSS 和 sitemap。
+- 给 MDX 注册更多自定义组件，比如提示块、播放器、交互式 Demo。
