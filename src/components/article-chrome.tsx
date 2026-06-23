@@ -32,11 +32,11 @@ export function ArticleChrome({
   const categoryLabel = getCategoryLabel(category);
 
   return (
-    <div className="mx-auto grid w-full max-w-6xl gap-12 lg:grid-cols-[minmax(0,48rem)_14rem] lg:justify-center">
-      <article className="w-full max-w-3xl">
+    <div className="relative mx-auto w-full max-w-3xl">
+      <article>
         <Link
           href={`/${category}`}
-          className="mb-6 inline-flex items-center gap-2 text-sm text-zinc-500 transition hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-zinc-500 transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
         >
           <ArrowLeft size={16} />
           返回{categoryLabel}
@@ -45,14 +45,14 @@ export function ArticleChrome({
           <div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
             <Link
               href="/"
-              className="transition hover:text-zinc-950 dark:hover:text-zinc-50"
+              className="transition-colors hover:text-zinc-950 dark:hover:text-zinc-50"
             >
               首页
             </Link>
             <span>/</span>
             <Link
               href={`/${category}`}
-              className="text-lime-700 transition hover:text-lime-800 dark:text-lime-400 dark:hover:text-lime-300"
+              className="text-lime-700 transition-colors hover:text-lime-800 dark:text-lime-400 dark:hover:text-lime-300"
             >
               {categoryLabel}
             </Link>
@@ -76,7 +76,7 @@ export function ArticleChrome({
       </article>
 
       {headings.length > 0 ? (
-        <aside className="hidden lg:block">
+        <aside className="absolute left-full top-0 ml-14 hidden w-60 xl:block">
           <div className="sticky top-24 border-l border-zinc-200 pl-5 text-sm dark:border-zinc-800">
             <p className="mb-3 font-medium text-zinc-950 dark:text-zinc-50">目录</p>
             <nav className="space-y-2">
@@ -84,7 +84,7 @@ export function ArticleChrome({
                 <a
                   key={heading.id}
                   href={`#${heading.id}`}
-                  className={`block leading-6 text-zinc-500 transition hover:text-lime-700 dark:text-zinc-400 dark:hover:text-lime-400 ${
+                  className={`block leading-6 text-zinc-500 transition-colors hover:text-lime-700 dark:text-zinc-400 dark:hover:text-lime-400 ${
                     heading.level === 3 ? "pl-3" : ""
                   }`}
                 >
