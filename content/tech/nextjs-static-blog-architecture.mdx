@@ -1,0 +1,163 @@
+---
+title: "从零设计一个长期可维护的 Next.js 静态博客"
+date: "2026-06-23"
+description: "围绕内容建模、构建流程、MDX 组件、部署和后续演进，整理一套个人博客的工程化设计思路。"
+tags: ["Next.js", "架构", "内容工程"]
+status: "published"
+---
+
+## 为什么静态博客仍然值得认真设计
+
+静态博客看起来很简单：写几篇 Markdown，生成 HTML，然后丢到 CDN 上。但真正长期写下去之后，你会发现问题并不只在页面能不能打开，而在于它是否足够顺手、足够稳定、足够容易扩展。
+
+一个好的个人博客系统，应该让你在写作时几乎感觉不到工程负担。你只需要把文章放进 `content/`，补齐 `title`、`date`、`tags` 这些元数据，剩下的路由、列表、SEO、目录、代码高亮，都应该由框架自动处理。
+
+### 静态生成的核心收益
+
+静态生成最大的价值不是“炫技”，而是减少运行时不确定性。页面在构建阶段被提前渲染，线上访问时只需要分发 HTML、CSS 和 JS。
+
+- 不需要数据库连接。
+- 不需要动态服务器。
+- 不需要给低频访问页面保活。
+- 不需要为了流量波动频繁调配置。
+
+对个人博客来说，这意味着它可以非常便宜，也非常快。
+
+## 内容模型要先定清楚
+
+文章内容最好和页面组件分离。页面组件负责展示，内容文件只负责表达信息。这样以后你想换设计、加 RSS、做搜索，都不需要回头批量改文章。
+
+当前项目里，一篇技术文章的元数据大概长这样：
+
+```yaml
+---
+title: "从零设计一个长期可维护的 Next.js 静态博客"
+date: "2026-06-23"
+description: "围绕内容建模、构建流程、MDX 组件、部署和后续演进，整理一套个人博客的工程化设计思路。"
+tags: ["Next.js", "架构", "内容工程"]
+status: "published"
+---
+```
+
+### 为什么要保留 status
+
+`status` 字段看起来很小，但它非常实用。你可以把还没写完的文章标成 `draft`，本地预览时保留，生产构建时过滤。这样写作过程不会被“必须一次写完”绑架。
+
+```ts
+export const publishedPosts = allPosts
+  .filter((post) => post.status === "published")
+  .sort((a, b) => b.date.localeCompare(a.date));
+```
+
+## 路由应该由内容驱动
+
+在 App Router 中，文章详情页最关键的是 `generateStaticParams()`。它把内容集合里的 slug 交给 Next.js，让 Next 在构建时提前生成静态页面。
+
+```tsx
+export function generateStaticParams() {
+  return getPostsByCategory("tech").map((post) => ({
+    slug: post.slug,
+  }));
+}
+```
+
+### Windows 路径的小坑
+
+如果你在 Windows 上开发，内容工具生成的路径可能包含反斜杠，比如 `tech\nextjs-guide`。如果代码只用 `/` 分割路径，slug 就会被算错。
+
+更稳妥的做法是先统一路径分隔符：
+
+```ts
+const normalizedPath = document._meta.path.replaceAll("\\", "/");
+const [section, ...slugParts] = normalizedPath.split("/");
+const slug = slugParts.join("/");
+```
+
+## MDX 组件是博客的扩展点
+
+MDX 的价值不只是“Markdown 里写 JSX”。更实用的价值是：你可以把常见展示模式沉淀成组件，再在文章里自然使用。
+
+比如代码块并不应该只是一个 `<pre>`。技术博客里的代码块通常需要：
+
+- 语法高亮。
+- 语言标识。
+- 一键复制。
+- 暗色主题适配。
+- 足够舒服的横向滚动。
+
+### 内联代码和代码块要分开处理
+
+内联代码适合展示 `content/`、`generateStaticParams()`、`pnpm build` 这种短片段。它应该轻量、紧凑，融在段落里。
+
+代码块适合展示完整逻辑。它需要更强的视觉边界和更好的阅读空间。
+
+```tsx
+export function CodeBlock(props: ComponentPropsWithoutRef<"pre">) {
+  return (
+    <div className="rounded-lg border">
+      <pre {...props} />
+    </div>
+  );
+}
+```
+
+## TOC 应该服务阅读，而不是抢占内容
+
+目录导航适合长文章，但它不应该挤压正文。正文的宽度最好保持稳定，目录作为辅助信息挂在右侧。
+
+一个比较舒服的布局是：
+
+```tsx
+<div className="grid gap-12 lg:grid-cols-[minmax(0,48rem)_14rem]">
+  <article className="max-w-3xl">...</article>
+  <aside>...</aside>
+</div>
+```
+
+### 移动端可以隐藏目录
+
+在手机上，目录常常会比文章本身更占空间。除非你做一个可展开的抽屉目录，否则直接隐藏是更克制的选择。
+
+## 部署链路保持简单
+
+个人博客的部署链路越短越好。最理想的状态是：
+
+1. 本地写文章。
+2. `pnpm build` 确认没问题。
+3. 推送到 GitHub。
+4. Vercel 自动构建并发布。
+
+不需要手动上传，不需要维护服务器，也不需要在后台点来点去。
+
+```bash
+pnpm build
+git add .
+git commit -m "Add new post"
+git push
+```
+
+## 后续可以慢慢加什么
+
+等基础写作体验稳定后，再考虑增强功能会更合适。下面这些功能都很适合个人博客，但没有必要一开始全部做完。
+
+### RSS
+
+RSS 对技术博客很重要。它能让读者不依赖平台推荐，直接订阅你的更新。
+
+### Sitemap
+
+Sitemap 可以帮助搜索引擎更快发现文章，尤其适合文章数量慢慢变多之后。
+
+### Giscus 评论
+
+Giscus 基于 GitHub Discussions，对技术博客很自然。它不需要你维护评论服务，也没有广告。
+
+### 全文搜索
+
+当文章超过几十篇后，本地全文搜索会变得很有用。可以考虑 Pagefind 这类静态搜索方案。
+
+## 小结
+
+一个好的静态博客项目，不应该只追求“能跑起来”。它更应该让写作变得持续、轻松、可维护。
+
+把内容模型、静态路由、MDX 组件、代码高亮、目录和部署流程打磨好之后，博客就不再只是一个 Demo，而是一个可以长期陪你积累作品和想法的小系统。
