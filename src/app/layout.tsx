@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <body>
-        <div className="min-h-screen bg-zinc-50 text-zinc-950 antialiased dark:bg-zinc-950 dark:text-zinc-50">
+        <div className="flex min-h-screen flex-col bg-zinc-50 text-zinc-950 antialiased dark:bg-zinc-950 dark:text-zinc-50">
           <header className="sticky top-0 z-10 border-b border-zinc-200 bg-zinc-50/90 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/90">
             <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5">
               <Link href="/" className="text-base font-semibold tracking-normal">
@@ -62,7 +62,9 @@ export default function RootLayout({
               </div>
             </div>
           </header>
-          <main className="mx-auto max-w-5xl px-5 py-10 sm:py-14">{children}</main>
+          <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-10 sm:py-14">
+            {children}
+          </main>
           <footer className="border-t border-zinc-200 dark:border-zinc-800">
             <div className="mx-auto flex max-w-5xl flex-col gap-2 px-5 py-8 text-sm text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
               <span>Built with Next.js, MDX, and Content Collections.</span>
