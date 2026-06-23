@@ -3,7 +3,7 @@ import { publishedPosts } from "@/lib/posts";
 
 export default function HomePage() {
   return (
-    <div className="space-y-10">
+    <div className="mx-auto max-w-5xl space-y-10">
       <section className="grid gap-6 border-b border-zinc-200 pb-10 dark:border-zinc-800 sm:grid-cols-[1fr_18rem] sm:items-end">
         <div>
           <p className="mb-4 text-sm font-medium text-lime-700 dark:text-lime-400">最新动态</p>
