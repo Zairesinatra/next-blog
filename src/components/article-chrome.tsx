@@ -32,8 +32,8 @@ export function ArticleChrome({
   const categoryLabel = getCategoryLabel(category);
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_13rem]">
-      <article className="mx-auto w-full max-w-3xl">
+    <div className="mx-auto grid w-full max-w-6xl gap-12 lg:grid-cols-[minmax(0,48rem)_14rem] lg:justify-center">
+      <article className="w-full max-w-3xl">
         <Link
           href={`/${category}`}
           className="mb-6 inline-flex items-center gap-2 text-sm text-zinc-500 transition hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
