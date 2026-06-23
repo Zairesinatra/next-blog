@@ -10,7 +10,7 @@ export default function LifePage() {
   const posts = getPostsByCategory("life");
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-5xl space-y-8">
       <header className="border-b border-zinc-200 pb-8 dark:border-zinc-800">
         <p className="mb-3 text-sm font-medium text-lime-700 dark:text-lime-400">Life</p>
         <h1 className="text-4xl font-semibold tracking-normal text-zinc-950 dark:text-zinc-50">生活碎碎念</h1>
