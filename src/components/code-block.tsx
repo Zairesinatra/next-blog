@@ -32,14 +32,14 @@ export function CodeBlock(props: ComponentPropsWithoutRef<"pre">) {
   }
 
   return (
-    <div className="group relative my-7 overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-      <div className="flex h-10 items-center justify-between border-b border-zinc-200 px-4 dark:border-white/10">
+    <div className="group relative my-7 overflow-hidden rounded-lg border border-zinc-200 bg-[#f6f8fa] shadow-sm transition-colors duration-200 dark:border-zinc-800 dark:bg-[#0d1117]">
+      <div className="flex h-10 items-center justify-between border-b border-zinc-200 bg-white/70 px-4 transition-colors duration-200 dark:border-white/10 dark:bg-white/[0.03]">
         <span className="font-mono text-xs uppercase tracking-normal text-zinc-500 dark:text-zinc-400">
           {language}
         </span>
         <button
           type="button"
-          className="inline-flex h-7 items-center gap-1.5 rounded-md border border-zinc-200 px-2 text-xs text-zinc-600 transition hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-950 dark:border-white/10 dark:text-zinc-300 dark:hover:border-white/20 dark:hover:bg-white/10 dark:hover:text-white"
+          className="inline-flex h-7 items-center gap-1.5 rounded-md border border-zinc-200 px-2 text-xs text-zinc-600 transition-colors hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-950 dark:border-white/10 dark:text-zinc-300 dark:hover:border-white/20 dark:hover:bg-white/10 dark:hover:text-white"
           onClick={copyCode}
         >
           {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -49,7 +49,7 @@ export function CodeBlock(props: ComponentPropsWithoutRef<"pre">) {
       <pre
         {...props}
         ref={preRef}
-        className="m-0 overflow-x-auto bg-zinc-50 p-4 text-sm leading-relaxed dark:bg-zinc-950"
+        className="m-0 overflow-x-auto bg-[#f6f8fa] p-4 text-sm leading-relaxed transition-colors duration-200 dark:bg-[#0d1117]"
       />
     </div>
   );
